@@ -228,7 +228,7 @@ void setup()
 	
 	
 }
-#define filenamepath	"~/Desktop/mytestfile.txt"
+#define filenamepath	"/home/pi/Desktop/mytestfile.txt"
 
 void loop()
 {
