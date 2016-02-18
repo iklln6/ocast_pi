@@ -192,13 +192,13 @@ void ILLUMINATE_STAT_LED(unsigned char a);
 
 
 
-
+float t0 = 0;
 
 
 int main (void)
 {
 //	printf("Hello world!\n");
-
+	t0 = clock();
 	wiringPiSetup () ;
 	setup();
 	
@@ -237,12 +237,14 @@ char filenamepath[64] = {0};
 char filenamepath_thumbdrive[64] = {0};
 	
 
+
 void loop()
 {
 	static int last_yy = 0;
 	static int last_mm = 0;
 	static int last_dd = 0;
-	
+	float dt = clock() - t0;
+	float t_sec = dt / (
 	
 	ILLUMINATE_STAT_LED(0);
 
@@ -270,7 +272,7 @@ void loop()
 	static int yy = 2016;
 	static int mm = 2;
 	static int dd = 18;
-	static int HH = 8;
+	static int HH = 17;
 	static int MM = 26;
 	static int SS = 42;
 	
@@ -296,13 +298,13 @@ void loop()
     
 
 	//printf("Opening file...\n");
-    ofp = fopen(filenamepath, "w+"); 
+    ofp = fopen(filenamepath, "a+"); 
     if(ofp){
 		fprintf(ofp,"%s\t%7.1f uV\n",TimeString,rdg_v);
 		fclose(ofp);
     }
 
-    ofp = fopen(filenamepath_thumbdrive, "w+"); 
+    ofp = fopen(filenamepath_thumbdrive, "a+"); 
     if(ofp){
 		fprintf(ofp,"%s\t%7.1f uV\n",TimeString,rdg_v);
 		fclose(ofp);
