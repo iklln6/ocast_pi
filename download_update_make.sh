@@ -1,3 +1,5 @@
+#!/bin/bash
+
 wget https://github.com/iklln6/ocast_pi/archive/master.zip ~/Desktop/master.zip
 unzip ~/Desktop/THUMB1GB/hello_pi/OCAST_heyworld/master.zip -d ~/Desktop/foo
 rm ~/Desktop/download_update_make.sh
@@ -9,3 +11,4 @@ rm ~/Desktop/foo/ocast_pi-master/ocast_hello_world.c
 rm ~/Desktop/foo/ocast_pi-master/LICENSE
 rm ~/Desktop/foo/ocast_pi-master/README.md
 rmdir ~/Desktop/foo/ocast_pi-master/
+make
