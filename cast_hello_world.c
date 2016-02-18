@@ -1,7 +1,7 @@
 #include <wiringPi.h>
 #include <stdio.h>
-//#include <sys/time.h>
-#include <time.h>
+#include <sys/time.h>
+//#include <time.h>
 
 
 
@@ -243,16 +243,16 @@ void loop()
 
 	
 	static int seconds_last = 99;
-	char TimeString[128];
+	char TimeString[128] = {0};
+	
 
 	timeval curTime;
-	gettimeofday(&curTime, NULL);
-	if (seconds_last == curTime.tv_sec)
-		return;
+//	gettimeofday(&curTime, NULL);
+	//if (seconds_last == curTime.tv_sec)return;
 	
-	seconds_last = curTime.tv_sec;
+	//seconds_last = curTime.tv_sec;
 	
-	strftime(TimeString, 80, "%Y-%m-%d %H:%M:%S", localtime(&curTime.tv_sec));
+	//strftime(TimeString, 80, "%Y-%m-%d %H:%M:%S", localtime(&curTime.tv_sec));
 	
 	
 	
