@@ -8,3 +8,4 @@ cp ~/Desktop/foo/ocast_pi-master/ocast_hello_world.c ~/Desktop/THUMB1GB/hello_pi
 rm ~/Desktop/foo/ocast_pi-master/ocast_hello_world.c
 rm ~/Desktop/foo/ocast_pi-master/LICENSE
 rm ~/Desktop/foo/ocast_pi-master/README.md
+rmdir ~/Desktop/foo/ocast_pi-master/
