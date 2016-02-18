@@ -244,7 +244,7 @@ void loop()
 	static int last_mm = 0;
 	static int last_dd = 0;
 	float dt = clock() - t0;
-	float t_sec = dt / (
+	//float t_sec = dt / (
 	
 	ILLUMINATE_STAT_LED(0);
 
