@@ -349,25 +349,25 @@ void ADS1118_cmd(unsigned short cmd)
 //  static unsigned long last_call_time = 0;
   data_u dat_cmd;
   dat_cmd.uint16 = cmd; 
-  data_u adc_rdg, readback;
+  data_u adc_rdg;
+//  data_u readback;
   adc_rdg.uint32 = 0;
 
 //Send configuration
   ADS1118_enable();
     SPI_transfer_byte(dat_cmd.bytes[1], SPIMODE);
     SPI_transfer_byte(dat_cmd.bytes[0], SPIMODE);
-    readback.bytes[1] = SPI_transfer_byte(dat_cmd.bytes[1], SPIMODE);
-    readback.bytes[0] = SPI_transfer_byte(dat_cmd.bytes[0], SPIMODE);
+//     readback.bytes[1] = SPI_transfer_byte(dat_cmd.bytes[1], SPIMODE);
+//     readback.bytes[0] = SPI_transfer_byte(dat_cmd.bytes[0], SPIMODE);
+	SPI_transfer_byte(dat_cmd.bytes[1], SPIMODE);
+	SPI_transfer_byte(dat_cmd.bytes[0], SPIMODE);
+
   ADS1118_disable();
   
-  if(dontrun){
-  printf("{%02X %02X}--RDG:[%02X %02X] (cmd)\n",
-      (unsigned char)readback.bytes[1],
-      (unsigned char)readback.bytes[0],
-      (unsigned char)adc_rdg.bytes[1],
-      (unsigned char)adc_rdg.bytes[0]);    
+
+//  printf("{%02X %02X}--RDG:[%02X %02X] (cmd)\n",(unsigned char)readback.bytes[1],(unsigned char)readback.bytes[0],(unsigned char)adc_rdg.bytes[1],(unsigned char)adc_rdg.bytes[0]);    
 //  printf("Readback:  %02X %02X\n",(unsigned char)readback.bytes[1],(unsigned char)readback.bytes[0]);
-}
+
   curr_cmd = dat_cmd.uint16;
   return;
 }
