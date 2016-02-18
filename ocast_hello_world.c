@@ -349,9 +349,9 @@ void ADS1118_cmd(unsigned short cmd)
 //  static unsigned long last_call_time = 0;
   data_u dat_cmd;
   dat_cmd.uint16 = cmd; 
-  data_u adc_rdg;
+//  data_u adc_rdg;
 //  data_u readback;
-  adc_rdg.uint32 = 0;
+//  adc_rdg.uint32 = 0;
 
 //Send configuration
   ADS1118_enable();
