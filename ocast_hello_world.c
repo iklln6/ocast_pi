@@ -1,7 +1,7 @@
 #include <wiringPi.h>
 #include <stdio.h>
 #include <sys/time.h>
-//#include <time.h>
+#include <time.h>
 
 
 
@@ -211,7 +211,8 @@ int main (void)
 
 
 
-
+FILE *ofp;          /*assigns a pointer to string *ofp */
+	
 void setup()
 {
 ///	pinMode(GPIO17, OUTPUT) ;
@@ -224,7 +225,8 @@ void setup()
 	init_ADS();
 //	ADS1118_cmd(ADS_READ_A0A1);
 	ADS1118_cmd( BUILD_ADS_CMD( MUX_A0A1 , data_V_fsr[chan] , cont_conv , DR_SPS_128 , TS_MODE_ADC , PU_DISABLE) );
-
+	ofp = fopen("~/Desktop/mytestfile.txt", "w+");          /*creates mytestfile.txt, opens it*/
+	
 }
 
 
@@ -243,18 +245,24 @@ void loop()
 
 	
 	static int seconds_last = 99;
-	char TimeString[128] = {0};
-	
+	char TimeString[128];
 
-//	timeval curTime;
-//	gettimeofday(&curTime, NULL);
-	//if (seconds_last == curTime.tv_sec)return;
+// 	timeval curTime;
+// 	gettimeofday(&curTime, NULL);
+//	if (seconds_last == curTime.tv_sec)return;
 	
-	//seconds_last = curTime.tv_sec;
+//	seconds_last = curTime.tv_sec;
 	
-	//strftime(TimeString, 80, "%Y-%m-%d %H:%M:%S", localtime(&curTime.tv_sec));
+//	strftime(TimeString, 80, "%Y-%m-%d %H:%M:%S", localtime(&curTime.tv_sec));
 	
+	int yy = 2016;
+	int mm = 2;
+	int dd = 18;
+	int HH = 08;
+	int MM = 26;
+	int SS = 42;
 	
+	sprintf(TimeString,"%d-%d-%d\t%d:%d\t%d\t",yy,mm,dd,HH,MM,SS);
 	
 	int rdg = 0;	
 	ADS1118_update(&rdg);
@@ -262,14 +270,14 @@ void loop()
     rdg_v *= data_V[chan];
     rdg_v *= 1e6;
     
+    
+    
     printf("%s\t%7.1f uV\n",TimeString,rdg_v);
     
 	
 //	printf("Rdg = %d\n",(int)rdg);
 
 
-//		  FILE *ofp;          /*assigns a pointer to string *ofp */
-//     ofp = fopen("mytestfile.txt", "w");          /*creates mytestfile.txt, opens it
 		
 
 
