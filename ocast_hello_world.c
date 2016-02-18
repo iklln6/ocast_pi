@@ -382,7 +382,7 @@ void ADS1118_update(int *rdg)
   static unsigned char first_run = 1;
   
 
-  data_u readback;
+//  data_u readback;
 
 
   if(first_run == 1)
@@ -398,8 +398,10 @@ void ADS1118_update(int *rdg)
   ADS1118_enable();
     adc_rdg.bytes[1] = SPI_transfer_byte(0xFF, SPIMODE);
     adc_rdg.bytes[0] = SPI_transfer_byte(0xFF, SPIMODE);
-    readback.bytes[1] = SPI_transfer_byte(0xFF, SPIMODE);
-    readback.bytes[0] = SPI_transfer_byte(0xFF, SPIMODE);
+//    readback.bytes[1] = SPI_transfer_byte(0xFF, SPIMODE);
+//    readback.bytes[0] = SPI_transfer_byte(0xFF, SPIMODE);
+	SPI_transfer_byte(0xFF, SPIMODE);
+	SPI_transfer_byte(0xFF, SPIMODE);
   ADS1118_disable();    
 
 //    if((readback.uint16&0x7FF8) == (curr_cmd&0x7FF8)){
