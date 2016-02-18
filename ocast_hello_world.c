@@ -279,7 +279,7 @@ void loop()
 		sprintf(filenamepath,"%s%s",filepath,filename);
 	
 	}
-	sprintf(TimeString,"%d-%d-%d\t%d:%d\t%d\t",yy,mm,dd,HH,MM,SS);
+	sprintf(TimeString,"%04d-%02d-%02d\t%02d:%02d\t%02d\t",yy,mm,dd,HH,MM,SS);
 	
 	int rdg = 0;	
 	ADS1118_update(&rdg);
