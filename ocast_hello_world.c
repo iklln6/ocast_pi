@@ -228,10 +228,18 @@ void setup()
 	
 	
 }
-#define filenamepath	"/home/pi/Desktop/mytestfile.txt"
+#define filepath	"/home/pi/Desktop/"
+char filename[16] = {0};
+char filenamepath[64] = {0};
+	
 
 void loop()
 {
+	static int last_yy = 0;
+	static int last_mm = 0;
+	static int last_dd = 0;
+	
+	
 	ILLUMINATE_STAT_LED(0);
 
 //	digitalWrite(GPIO17, HIGH); 
@@ -262,6 +270,15 @@ void loop()
 	static int MM = 26;
 	static int SS = 42;
 	
+	
+	if( (last_yy != yy)||(last_mm != mm)||(last_dd != dd) ){
+		last_yy = yy;
+		last_mm = mm;
+		last_dd = dd;
+		sprintf(filename,"%04d%02d%02d.txt",yy,mm,dd);
+		sprintf(filenamepath,"%s%s",filepath,filename);
+	
+	}
 	sprintf(TimeString,"%d-%d-%d\t%d:%d\t%d\t",yy,mm,dd,HH,MM,SS);
 	
 	int rdg = 0;	
@@ -273,19 +290,19 @@ void loop()
     printf("%s\t%7.1f uV\n",TimeString,rdg_v);
     
 
-	printf("Opening file...\n");
+	//printf("Opening file...\n");
     ofp = fopen(filenamepath, "w+"); 
 
     if(!ofp){
     	printf("Error opening file! (%s)\n",filenamepath);
     }
     else{
-    	printf("File opened successfully...writing...\n");
+    	//printf("File opened successfully...writing...\n");
 		fprintf(ofp,"%s\t%7.1f uV\n",TimeString,rdg_v);
-		printf("done...\n");
-		printf("Closing file...");
+		//printf("done...\n");
+		//printf("Closing file...");
 		fclose(ofp);
-		printf("done...\n");
+		//printf("done...\n");
     }
 	
 //	printf("Rdg = %d\n",(int)rdg);
