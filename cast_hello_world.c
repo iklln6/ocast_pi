@@ -246,7 +246,7 @@ void loop()
 	char TimeString[128] = {0};
 	
 
-	timeval curTime;
+//	timeval curTime;
 //	gettimeofday(&curTime, NULL);
 	//if (seconds_last == curTime.tv_sec)return;
 	
