@@ -229,8 +229,12 @@ void setup()
 	
 }
 #define filepath	"/home/pi/Desktop/"
+#define filepath_thumbdrive	"/media/pi/THUMB1GB/"
+
+
 char filename[16] = {0};
 char filenamepath[64] = {0};
+char filenamepath_thumbdrive[64] = {0};
 	
 
 void loop()
@@ -277,6 +281,7 @@ void loop()
 		last_dd = dd;
 		sprintf(filename,"%04d%02d%02d.txt",yy,mm,dd);
 		sprintf(filenamepath,"%s%s",filepath,filename);
+		sprintf(filenamepath_thumbdrive,"%s%s",filepath_thumbdrive,filename);
 	
 	}
 	sprintf(TimeString,"%04d-%02d-%02d\t%02d:%02d\t%02d\t",yy,mm,dd,HH,MM,SS);
@@ -292,18 +297,21 @@ void loop()
 
 	//printf("Opening file...\n");
     ofp = fopen(filenamepath, "w+"); 
-
-    if(!ofp){
-    	printf("Error opening file! (%s)\n",filenamepath);
-    }
-    else{
-    	//printf("File opened successfully...writing...\n");
+    if(ofp){
 		fprintf(ofp,"%s\t%7.1f uV\n",TimeString,rdg_v);
-		//printf("done...\n");
-		//printf("Closing file...");
 		fclose(ofp);
-		//printf("done...\n");
     }
+
+    ofp = fopen(filenamepath_thumbdrive, "w+"); 
+    if(ofp){
+		fprintf(ofp,"%s\t%7.1f uV\n",TimeString,rdg_v);
+		fclose(ofp);
+    }
+
+
+    
+    
+    
 	
 //	printf("Rdg = %d\n",(int)rdg);
 
