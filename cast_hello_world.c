@@ -1,6 +1,6 @@
 #include <wiringPi.h>
 #include <stdio.h>
-#include <sys/time.h>
+//#include <sys/time.h>
 #include <time.h>
 
 
