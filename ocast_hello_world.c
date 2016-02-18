@@ -225,7 +225,7 @@ void setup()
 	init_ADS();
 //	ADS1118_cmd(ADS_READ_A0A1);
 	ADS1118_cmd( BUILD_ADS_CMD( MUX_A0A1 , data_V_fsr[chan] , cont_conv , DR_SPS_128 , TS_MODE_ADC , PU_DISABLE) );
-	ofp = fopen("~/Desktop/mytestfile.txt", "w+");          /*creates mytestfile.txt, opens it*/
+	
 	
 }
 
@@ -244,7 +244,7 @@ void loop()
 
 
 	
-	static int seconds_last = 99;
+//	static int seconds_last = 99;
 	char TimeString[128];
 
 // 	timeval curTime;
@@ -270,9 +270,11 @@ void loop()
     rdg_v *= data_V[chan];
     rdg_v *= 1e6;
     
-    
-    
     printf("%s\t%7.1f uV\n",TimeString,rdg_v);
+    
+    ofp = fopen("~/Desktop/mytestfile.txt", "w+");          /*creates mytestfile.txt, opens it*/
+    fprintf(ofp,"%s\t%7.1f uV\n",TimeString,rdg_v);
+    fclose(ofp);
     
 	
 //	printf("Rdg = %d\n",(int)rdg);
@@ -340,6 +342,8 @@ void change_chip(int chip)
 	}
 }
 
+
+int dontrun = 0;
 void ADS1118_cmd(unsigned short cmd)
 {
 //  static unsigned long last_call_time = 0;
@@ -355,7 +359,8 @@ void ADS1118_cmd(unsigned short cmd)
     readback.bytes[1] = SPI_transfer_byte(dat_cmd.bytes[1], SPIMODE);
     readback.bytes[0] = SPI_transfer_byte(dat_cmd.bytes[0], SPIMODE);
   ADS1118_disable();
-  if(0){
+  
+  if(dontrun){
   printf("{%02X %02X}--RDG:[%02X %02X] (cmd)\n",
       (unsigned char)readback.bytes[1],
       (unsigned char)readback.bytes[0],
