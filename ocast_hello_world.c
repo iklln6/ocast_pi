@@ -308,6 +308,27 @@ void loop()
 //	printf("Rdg = %d\n",(int)rdg);
 
 	SS++;
+	if(SS > 59){
+		SS = 0;
+		MM++;
+		if(MM > 59){
+			MM = 0;
+			HH++;
+			if(HH > 23){
+				HH = 0;
+				dd++;
+				if(dd > 28){
+					dd = 1;
+					mm++;
+					if(mm > 12){
+						mm++;
+						yy++;
+					}
+				}
+			}
+		}
+	}
+	
 		
 
 
