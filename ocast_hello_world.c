@@ -228,7 +228,7 @@ void setup()
 	
 	
 }
-
+#define filenamepath	"~/Desktop/mytestfile.txt"
 
 void loop()
 {
@@ -255,12 +255,12 @@ void loop()
 	
 //	strftime(TimeString, 80, "%Y-%m-%d %H:%M:%S", localtime(&curTime.tv_sec));
 	
-	int yy = 2016;
-	int mm = 2;
-	int dd = 18;
-	int HH = 8;
-	int MM = 26;
-	int SS = 42;
+	static int yy = 2016;
+	static int mm = 2;
+	static int dd = 18;
+	static int HH = 8;
+	static int MM = 26;
+	static int SS = 42;
 	
 	sprintf(TimeString,"%d-%d-%d\t%d:%d\t%d\t",yy,mm,dd,HH,MM,SS);
 	
@@ -272,15 +272,25 @@ void loop()
     
     printf("%s\t%7.1f uV\n",TimeString,rdg_v);
     
-    /*
-    ofp = fopen("~/Desktop/mytestfile.txt", "w+"); 
-    fprintf(ofp,"%s\t%7.1f uV\n",TimeString,rdg_v);
-    fclose(ofp);
-    */
+
+	printf("Opening file...\n");
+    ofp = fopen(filenamepath, "w+"); 
+
+    if(!ofp){
+    	printf("Error opening file! (%s)\n",filenamepath);
+    }
+    else{
+    	printf("File opened successfully...writing...\n");
+		fprintf(ofp,"%s\t%7.1f uV\n",TimeString,rdg_v);
+		printf("done...\n");
+		printf("Closing file...");
+		fclose(ofp);
+		printf("done...\n");
+    }
 	
 //	printf("Rdg = %d\n",(int)rdg);
 
-
+	SS++;
 		
 
 
