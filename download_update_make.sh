@@ -10,3 +10,4 @@ unzip ~/Desktop/THUMB1GB/hello_pi/OCAST_heyworld/master.zip -d ~/Desktop/foo
 rm ~/Desktop/THUMB1GB/hello_pi/OCAST_heyworld/master.zip
 cp ~/Desktop/foo/ocast_pi-master/ocast_hello_world.c ~/Desktop/THUMB1GB/hello_pi/OCAST_heyworld
 make
+#sudo ./OCAST_heyworld.bin
