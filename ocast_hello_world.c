@@ -258,7 +258,7 @@ void loop()
 	int yy = 2016;
 	int mm = 2;
 	int dd = 18;
-	int HH = 08;
+	int HH = 8;
 	int MM = 26;
 	int SS = 42;
 	
