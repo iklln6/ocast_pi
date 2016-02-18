@@ -197,7 +197,7 @@ void ILLUMINATE_STAT_LED(unsigned char a);
 
 int main (void)
 {
-	printf("Hello world!\n");
+//	printf("Hello world!\n");
 
 	wiringPiSetup () ;
 	setup();
@@ -272,10 +272,11 @@ void loop()
     
     printf("%s\t%7.1f uV\n",TimeString,rdg_v);
     
-    ofp = fopen("~/Desktop/mytestfile.txt", "w+");          /*creates mytestfile.txt, opens it*/
+    /*
+    ofp = fopen("~/Desktop/mytestfile.txt", "w+"); 
     fprintf(ofp,"%s\t%7.1f uV\n",TimeString,rdg_v);
     fclose(ofp);
-    
+    */
 	
 //	printf("Rdg = %d\n",(int)rdg);
 
