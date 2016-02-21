@@ -194,8 +194,8 @@ void sw_SPI_begin();
 void init_ADS();
 void ILLUMINATE_STAT_LED(unsigned char a);
 
-static short MCP79510_writeRegister( unsigned char addr , unsigned char Data );
-static unsigned char MCP79510_readRegister(unsigned char addr);
+short MCP79510_writeRegister( unsigned char addr , unsigned char Data );
+unsigned char MCP79510_readRegister(unsigned char addr);
 mcp_timestamp_t get_fw_time();
 mcp_timestamp_t MCP79510_getTime();
 void MCP79510_init();
@@ -725,7 +725,7 @@ mcp_timestamp_t get_fw_time()
 
 
 
-static unsigned char MCP79510_readRegister(unsigned char addr)
+unsigned char MCP79510_readRegister(unsigned char addr)
 {				
 //	MCP79510_disable();
 //	SPI.begin();
@@ -746,7 +746,7 @@ static unsigned char MCP79510_readRegister(unsigned char addr)
 }
 
 
-static short MCP79510_writeRegister( unsigned char addr , unsigned char Data )
+short MCP79510_writeRegister( unsigned char addr , unsigned char Data )
 {
 	MCP79510_enable();
 //	SPI.beginTransaction(SPISettings(MCP79510_FREQ, MSBFIRST, MCP79510_SPI_DATAMODE));
