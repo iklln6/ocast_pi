@@ -136,6 +136,13 @@ data_u Data;
 #define SW_MISO					GPIO9
 #define SW_SCK					GPIO11
 
+
+#define MCP79510_CS_pin			GPIO25
+#define MCP79510_enable()		pinMode(MCP79510_CS_pin,OUTPUT); digitalWrite(MCP79510_CS_pin,LOW)
+#define MCP79510_disable()		pinMode(MCP79510_CS_pin,OUTPUT); digitalWrite(MCP79510_CS_pin,HIGH)
+
+
+
 int ADS1118_CS_pin2 = GPIO7;
 int ADS1118_CS_pin = GPIO8;
 
@@ -233,6 +240,7 @@ void setup()
 	
 	
 }
+
 #define filepath	"/home/pi/Desktop/"
 #define filepath_thumbdrive	"/media/pi/THUMB1GB/"
 
@@ -407,7 +415,7 @@ void change_chip(int chip)
 }
 
 
-int dontrun = 0;
+
 void ADS1118_cmd(unsigned short cmd)
 {
 //  static unsigned long last_call_time = 0;
@@ -762,7 +770,7 @@ static short MCP79510_writeRegister( unsigned char addr , unsigned char Data )
 	
 	if(b != Data){
 		printf("WRITE FAILED!!\n");
-		wprintf("<br><br>WRITE FAILED (expected 0x%02X, read 0x%02X)<br><br>",Data,b);
+		//printf("<br><br>WRITE FAILED (expected 0x%02X, read 0x%02X)<br><br>",Data,b);
 		return -1;
 	}
 	else{
