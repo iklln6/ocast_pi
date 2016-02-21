@@ -187,7 +187,12 @@ void sw_SPI_begin();
 void init_ADS();
 void ILLUMINATE_STAT_LED(unsigned char a);
 
-
+static int16_t MCP79510_writeRegister( uint8_t addr , uint8_t Data );
+static uint8_t MCP79510_readRegister(uint8_t addr);
+timestamp_t get_fw_time();
+timestamp_t MCP79510_getTime();
+void MCP79510_init();
+int month_to_val(const char *mostr);
 
 
 
@@ -244,7 +249,7 @@ void loop()
 	static int last_mm = 0;
 	static int last_dd = 0;
 	float dt = clock() - t0;
-	//float t_sec = dt / (
+	float t_sec = dt / (
 	
 	ILLUMINATE_STAT_LED(0);
 
@@ -535,4 +540,235 @@ unsigned char SPI_transfer_byte(unsigned char byte_out, unsigned char mode)
   ILLUMINATE_STAT_LED(0);
 
   return byte_in;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+int month_to_val(const char *mostr)
+{
+	switch(mostr[0]){
+		case 'J':
+			switch(mostr[1]){
+				case 'a': return 1;
+				case 'u':
+					switch(mostr[2]){
+						case 'l': return 7;
+						case 'n': return 6;
+						default: return 0;
+					}
+					break;
+				default: return 0;
+			}
+			break;
+		case 'F': return 2;
+		case 'M': 
+			switch(mostr[2]){
+				case 'r': return 3;
+				case 'y': return 5;
+				default: return 0;
+			}
+			break;
+		case 'A':
+			switch(mostr[1]){
+				case 'p': return 4;
+				case 'u': return 8;
+				default: return 0;
+			}
+			break;
+		case 'S': return 9;
+		case 'O': return 10;
+		case 'N': return 11;
+		case 'D': return 12;
+		default: return 0;
+	}
+	return 0;	
+}
+
+
+
+
+
+void MCP79510_init()
+{
+	Serial.print("Initializing RTC...");
+	MCP79510_disable();
+//	SPI.begin();
+// 	SPI.setFrequency(MCP79510_FREQ);			//SPI.setClockDivider(SPI_CLOCK_DIV128);
+// 	SPI.setDataMode(MCP79510_SPI_DATAMODE);
+	MCP79510_disable();
+
+	MCP79510_writeRegister(0x01,0x80);
+	MCP79510_writeRegister(0x07,0x12);
+	Serial.print("OK\n");
+// 	0x12
+// 	0x01
+// 	0x80
+	get_fw_time();
+	
+}
+
+
+
+timestamp_t MCP79510_getTime()
+{
+#define rtc_to_dec(y,m)		(((y>>4)&m)*10+(y&0xF))
+	RTC_Time.s  = rtc_to_dec( MCP79510_readRegister(0x01) , 0x3 );
+	RTC_Time.mi = rtc_to_dec( MCP79510_readRegister(0x02) , 0x3 );
+	RTC_Time.h  = rtc_to_dec( MCP79510_readRegister(0x03) , 0x1 );
+
+	RTC_Time.d  = rtc_to_dec( MCP79510_readRegister(0x05) , 0x3 );
+	RTC_Time.mo = rtc_to_dec( MCP79510_readRegister(0x06) , 0x1 );
+	RTC_Time.y  = rtc_to_dec( MCP79510_readRegister(0x07) , 0xF ) + 2000;
+
+	return RTC_Time;
+}
+
+
+timestamp_t get_fw_time()
+{
+#define rtc_reg_format(y)		( ((y/10)<<0x4) | ( (y-((y/10)*10)) ) )
+
+	char month[4] = {0};
+	
+	char date[32] = {0};
+	char time[32] = {0};
+	
+	strcpy(date,__DATE__);
+	strcpy(time,__TIME__);
+	
+	month[0] = date[0];
+	month[1] = date[1];
+	month[2] = date[2];
+	FirmwareUploadTime.mo = month_to_val(month);
+	
+	int n = 5;
+	FirmwareUploadTime.d = date[n++] - 0x30;
+	
+	if(date[n] != ' '){
+		FirmwareUploadTime.d = FirmwareUploadTime.d*10 + (date[n]-0x30);
+		n++;
+	}
+	n++;
+	FirmwareUploadTime.y = (date[n++]-0x30)*1000;
+	FirmwareUploadTime.y += (date[n++]-0x30)*100;
+	FirmwareUploadTime.y += (date[n++]-0x30)*10;
+	FirmwareUploadTime.y += (date[n++]-0x30)*1;
+	
+	FirmwareUploadTime.h  = (time[0]-0x30)*10 + (time[1]-0x30);
+	FirmwareUploadTime.mi = (time[3]-0x30)*10 + (time[4]-0x30);
+	FirmwareUploadTime.s  = (time[6]-0x30)*10 + (time[7]-0x30);
+
+	FirmwareUploadTime.unix = (((FirmwareUploadTime.y-1970)*31556926)+((FirmwareUploadTime.mo-1)*2629743)+((FirmwareUploadTime.d-1)*86400)+(FirmwareUploadTime.h*3600)+(FirmwareUploadTime.mi*60)+(FirmwareUploadTime.s));
+	
+	uint8_t xs = (rtc_reg_format(FirmwareUploadTime.s) | 0x80);
+	printf("Sec:  %d -> %02X\n",FirmwareUploadTime.s,xs);
+
+
+	uint8_t xmi = rtc_reg_format(FirmwareUploadTime.mi);
+	printf("Min:  %d -> %02X\n",FirmwareUploadTime.mi,xmi);
+
+
+	uint8_t xh  = rtc_reg_format(FirmwareUploadTime.h);
+	printf("Hour:  %d -> %02X\n",FirmwareUploadTime.h,xh);
+
+
+	uint8_t xd  = rtc_reg_format(FirmwareUploadTime.d);
+	printf("Day:  %d -> %02X\n",FirmwareUploadTime.d,xd);
+
+
+	uint8_t xmo = rtc_reg_format(FirmwareUploadTime.mo);
+	printf("Month:  %d -> %02X\n",FirmwareUploadTime.mo,xmo);
+
+	printf("Year:  %d -> %02X\n",2015,0x15);
+
+
+	printf("Writing...\n");
+
+	MCP79510_writeRegister(0x01, xs  );
+	MCP79510_writeRegister(0x02, xmi );
+	MCP79510_writeRegister(0x03, xh  );
+
+	MCP79510_writeRegister(0x05, xd  );
+	MCP79510_writeRegister(0x06, xmo );
+	MCP79510_writeRegister(0x07, 0x15  );
+
+	printf("RTC Clock updated with firmware timestamp\n");
+	
+	return FirmwareUploadTime;
+}
+
+
+
+
+
+static uint8_t MCP79510_readRegister(uint8_t addr)
+{				
+//	MCP79510_disable();
+//	SPI.begin();
+//	SPI.setFrequency(MCP79510_FREQ);			//SPI.setClockDivider(SPI_CLOCK_DIV128);
+//	SPI.setDataMode(MCP79510_SPI_DATAMODE);
+	MCP79510_disable();
+
+
+  	MCP79510_enable();
+  //	SPI.beginTransaction(SPISettings(MCP79510_FREQ, MSBFIRST, MCP79510_SPI_DATAMODE));
+		SPI_transfer(0x13);
+		SPI_transfer(addr);
+		unsigned char b = SPI_transfer(0x00);
+//	SPI.endTransaction();
+	MCP79510_disable();
+	
+  	return b;
+}
+
+
+static int16_t MCP79510_writeRegister( uint8_t addr , uint8_t Data )
+{
+	MCP79510_enable();
+//	SPI.beginTransaction(SPISettings(MCP79510_FREQ, MSBFIRST, MCP79510_SPI_DATAMODE));
+		SPI_transfer(0x12);
+		SPI_transfer(addr);
+		SPI_transfer(Data);
+//	SPI.endTransaction();
+  	MCP79510_disable();
+  	
+  	MCP79510_enable();
+  	MCP79510_disable();
+  	
+  	delay(15);
+  	
+  	MCP79510_enable();
+		SPI_transfer(0x13);
+		SPI_transfer(addr);
+		unsigned char b = SPI_transfer(0x00);
+	MCP79510_disable();
+	
+	
+	if(b != Data){
+		printf("WRITE FAILED!!\n");
+		wprintf("<br><br>WRITE FAILED (expected 0x%02X, read 0x%02X)<br><br>",Data,b);
+		return -1;
+	}
+	else{
+		printf("Write to address %02X (%02X) successful!\n",addr,Data);
+		return 1;
+	}
+  	
+  	return 1;
 }
