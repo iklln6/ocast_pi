@@ -736,9 +736,9 @@ unsigned char MCP79510_readRegister(unsigned char addr)
 
   	MCP79510_enable();
   //	SPI.beginTransaction(SPISettings(MCP79510_FREQ, MSBFIRST, MCP79510_SPI_DATAMODE));
-		SPI_transfer(0x13);
-		SPI_transfer(addr);
-		unsigned char b = SPI_transfer(0x00);
+		SPI_transfer_byte(0x13);
+		SPI_transfer_byte(addr);
+		unsigned char b = SPI_transfer_byte(0x00);
 //	SPI.endTransaction();
 	MCP79510_disable();
 	
@@ -750,9 +750,9 @@ short MCP79510_writeRegister( unsigned char addr , unsigned char Data )
 {
 	MCP79510_enable();
 //	SPI.beginTransaction(SPISettings(MCP79510_FREQ, MSBFIRST, MCP79510_SPI_DATAMODE));
-		SPI_transfer(0x12);
-		SPI_transfer(addr);
-		SPI_transfer(Data);
+		SPI_transfer_byte(0x12);
+		SPI_transfer_byte(addr);
+		SPI_transfer_byte(Data);
 //	SPI.endTransaction();
   	MCP79510_disable();
   	
@@ -762,9 +762,9 @@ short MCP79510_writeRegister( unsigned char addr , unsigned char Data )
   	delay(15);
   	
   	MCP79510_enable();
-		SPI_transfer(0x13);
-		SPI_transfer(addr);
-		unsigned char b = SPI_transfer(0x00);
+		SPI_transfer_byte(0x13);
+		SPI_transfer_byte(addr);
+		unsigned char b = SPI_transfer_byte(0x00);
 	MCP79510_disable();
 	
 	
