@@ -5,7 +5,7 @@
 
 
 
-/*typedef struct{
+typedef struct{
   int y;
   int mo;
   int d;
@@ -13,7 +13,7 @@
   int mi;
   int s;
   unsigned long unix;
-}timestamp_t;*/
+}mcp_timestamp_t;
 
 typedef union { // Union makes conversion from 4 bytes to an unsigned 32-bit int easy
   unsigned char bytes[4];
@@ -26,7 +26,7 @@ typedef union { // Union makes conversion from 4 bytes to an unsigned 32-bit int
 } data_u;
 
 typedef struct{
- // timestamp_t t;
+ // mcp_timestamp_t t;
 
   unsigned long Ai[8];
   unsigned long Ti;
@@ -187,10 +187,10 @@ void sw_SPI_begin();
 void init_ADS();
 void ILLUMINATE_STAT_LED(unsigned char a);
 
-static int16_t MCP79510_writeRegister( uint8_t addr , uint8_t Data );
-static uint8_t MCP79510_readRegister(uint8_t addr);
-timestamp_t get_fw_time();
-timestamp_t MCP79510_getTime();
+static short MCP79510_writeRegister( unsigned char addr , unsigned char Data );
+static unsigned char MCP79510_readRegister(unsigned char addr);
+mcp_timestamp_t get_fw_time();
+mcp_timestamp_t MCP79510_getTime();
 void MCP79510_init();
 int month_to_val(const char *mostr);
 
@@ -625,7 +625,7 @@ void MCP79510_init()
 
 
 
-timestamp_t MCP79510_getTime()
+mcp_timestamp_t MCP79510_getTime()
 {
 #define rtc_to_dec(y,m)		(((y>>4)&m)*10+(y&0xF))
 	RTC_Time.s  = rtc_to_dec( MCP79510_readRegister(0x01) , 0x3 );
@@ -640,7 +640,7 @@ timestamp_t MCP79510_getTime()
 }
 
 
-timestamp_t get_fw_time()
+mcp_timestamp_t get_fw_time()
 {
 #define rtc_reg_format(y)		( ((y/10)<<0x4) | ( (y-((y/10)*10)) ) )
 
@@ -676,23 +676,23 @@ timestamp_t get_fw_time()
 
 	FirmwareUploadTime.unix = (((FirmwareUploadTime.y-1970)*31556926)+((FirmwareUploadTime.mo-1)*2629743)+((FirmwareUploadTime.d-1)*86400)+(FirmwareUploadTime.h*3600)+(FirmwareUploadTime.mi*60)+(FirmwareUploadTime.s));
 	
-	uint8_t xs = (rtc_reg_format(FirmwareUploadTime.s) | 0x80);
+	unsigned char xs = (rtc_reg_format(FirmwareUploadTime.s) | 0x80);
 	printf("Sec:  %d -> %02X\n",FirmwareUploadTime.s,xs);
 
 
-	uint8_t xmi = rtc_reg_format(FirmwareUploadTime.mi);
+	unsigned char xmi = rtc_reg_format(FirmwareUploadTime.mi);
 	printf("Min:  %d -> %02X\n",FirmwareUploadTime.mi,xmi);
 
 
-	uint8_t xh  = rtc_reg_format(FirmwareUploadTime.h);
+	unsigned char xh  = rtc_reg_format(FirmwareUploadTime.h);
 	printf("Hour:  %d -> %02X\n",FirmwareUploadTime.h,xh);
 
 
-	uint8_t xd  = rtc_reg_format(FirmwareUploadTime.d);
+	unsigned char xd  = rtc_reg_format(FirmwareUploadTime.d);
 	printf("Day:  %d -> %02X\n",FirmwareUploadTime.d,xd);
 
 
-	uint8_t xmo = rtc_reg_format(FirmwareUploadTime.mo);
+	unsigned char xmo = rtc_reg_format(FirmwareUploadTime.mo);
 	printf("Month:  %d -> %02X\n",FirmwareUploadTime.mo,xmo);
 
 	printf("Year:  %d -> %02X\n",2015,0x15);
@@ -717,7 +717,7 @@ timestamp_t get_fw_time()
 
 
 
-static uint8_t MCP79510_readRegister(uint8_t addr)
+static unsigned char MCP79510_readRegister(unsigned char addr)
 {				
 //	MCP79510_disable();
 //	SPI.begin();
@@ -738,7 +738,7 @@ static uint8_t MCP79510_readRegister(uint8_t addr)
 }
 
 
-static int16_t MCP79510_writeRegister( uint8_t addr , uint8_t Data )
+static short MCP79510_writeRegister( unsigned char addr , unsigned char Data )
 {
 	MCP79510_enable();
 //	SPI.beginTransaction(SPISettings(MCP79510_FREQ, MSBFIRST, MCP79510_SPI_DATAMODE));
